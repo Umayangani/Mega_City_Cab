@@ -1,0 +1,35 @@
+/* Set the background color of the navbar */
+.navbar {
+  background-color: black !important;
+  /*position: fixed;*/
+  top: 0;
+  left: 0;
+  width: 100%;
+  height : 70px; /* Changed from 200% to 100% */
+  z-index: 1000;
+}
+
+/* Set text color to white */
+.nav-link {
+  color: white !important;
+}
+
+/* Change text color to yellow/gold when active */
+.nav-link.active {
+  color: yellow !important;
+}
+
+/* Hover effect for nav links */
+.nav-link:hover {
+  color: gold !important;
+}
+
+/* Align nav items to the right */
+.navbar .nav {
+  margin-left: auto;
+}
+
+/* Add some padding to body to prevent content from being hidden behind navbar */
+body {
+  padding-top: 60px; /* This creates space below the navbar */
+}

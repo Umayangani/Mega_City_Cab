@@ -1,0 +1,130 @@
+.body-container {
+  text-align: center;
+  padding: 80px 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e6e9f0 100%);
+  min-height: calc(100vh - 300px);
+}
+
+.body-container h2 {
+  margin-bottom: 40px;
+  font-size: 36px;
+  font-weight: 700;
+  color: #333;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+  position: relative;
+  display: inline-block;
+}
+
+.body-container h2:after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #4a148c, #7b1fa2);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+}
+
+.request-ride-button {
+  background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%);
+  color: white;
+  padding: 15px 30px;
+  margin: 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.request-ride-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #7b1fa2 0%, #9c27b0 100%);
+  transition: all 0.4s ease-in-out;
+  z-index: -1;
+}
+
+.request-ride-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 7px 20px rgba(123, 31, 162, 0.4);
+}
+
+.request-ride-button:hover:before {
+  left: 0;
+}
+
+.request-ride-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(123, 31, 162, 0.4);
+}
+
+/* Added a feature card section */
+.features-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 60px;
+  padding: 0 20px;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin: 15px;
+  flex: 0 1 300px;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+  color: #7b1fa2;
+}
+
+.feature-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.feature-description {
+  color: #666;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .body-container {
+    padding: 50px 20px;
+  }
+  
+  .body-container h2 {
+    font-size: 28px;
+  }
+  
+  .request-ride-button {
+    display: block;
+    width: 80%;
+    margin: 15px auto;
+  }
+}
