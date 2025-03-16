@@ -2,125 +2,87 @@ import axios from 'axios';
 
 const API_BASE_URL = "http://localhost:8080/api";
 
-// Create axios instance with default config
-const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  timeout: 10000 // Set a timeout to avoid hanging requests
-});
+// Configure axios to include the token in all requests
+const setupAxiosInterceptors = (token) => {
+  axios.interceptors.request.use(
+    (config) => {
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+};
 
-// Enhanced error logging interceptor
-apiClient.interceptors.request.use(
-  config => {
-    console.log(`API Request: ${config.method.toUpperCase()} ${config.baseURL}${config.url}`, config.data || {});
-    return config;
-  },
-  error => {
-    console.error('API Request Error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// Enhanced response interceptor for better error handling
-apiClient.interceptors.response.use(
-  response => {
-    console.log(`API Response from ${response.config.url}:`, response.status, response.data);
-    return response;
-  },
-  error => {
-    if (error.response) {
-      console.error('API Error Response:', {
-        status: error.response.status,
-        url: error.config.url,
-        data: error.response.data
-      });
-    } else if (error.request) {
-      console.error('API No Response:', {
-        url: error.config?.url,
-        request: error.request
-      });
-    } else {
-      console.error('API Request Setup Error:', error.message);
+export const AuthService = {
+  login: async (credentials) => {
+    const response = await axios.post(`${API_BASE_URL}/auth/login`, credentials);
+    if (response.data && response.data.token) {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify({
+        id: response.data.id,
+        username: response.data.username,
+        email: response.data.email,
+        role: response.data.role.toLowerCase(),
+        name: response.data.name,
+        userId: response.data.userId
+      }));
+      setupAxiosInterceptors(response.data.token);
     }
-    return Promise.reject(error);
-  }
-);
-
-// Vehicle API services
-export const VehicleService = {
-  // Add a new vehicle
-  addVehicle: (vehicleData) => {
-    return apiClient.post('/vehicles', vehicleData);
+    return response.data;
   },
   
-  // Get all vehicles
-  getAllVehicles: () => {
-    return apiClient.get('/vehicles');
+  register: async (userData) => {
+    const response = await axios.post(`${API_BASE_URL}/auth/register`, userData);
+    return response.data;
   },
   
-  // Get vehicles grouped by type
-  getVehiclesByType: () => {
-    return apiClient.get('/vehicles/by-type');
+  logout: () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    // Reload the page to reset all app state
+    window.location.href = '/login';
   },
   
-  // Search vehicles
-  searchVehicles: (plateNumber, driverId) => {
-    let url = '/vehicles/search?';
-    const params = [];
-    
-    if (plateNumber) {
-      params.push(`plateNumber=${encodeURIComponent(plateNumber)}`);
+  getCurrentUser: () => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        return JSON.parse(userStr);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        return null;
+      }
     }
-    
-    if (driverId) {
-      params.push(`driverId=${driverId}`);
-    }
-    
-    return apiClient.get(url + params.join('&'));
+    return null;
   },
   
-  // Get vehicle by ID
-  getVehicleById: (id) => {
-    if (!id) {
-      return Promise.reject(new Error("Vehicle ID is required"));
-    }
-    return apiClient.get(`/vehicles/${id}`);
+  getToken: () => {
+    return localStorage.getItem('token');
   },
   
-  // Update vehicle
-  updateVehicle: (id, vehicleData) => {
-    if (!id) {
-      return Promise.reject(new Error("Vehicle ID is required"));
+  // Initialize auth state on app load
+  initAuth: () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setupAxiosInterceptors(token);
     }
-    return apiClient.put(`/vehicles/${id}`, vehicleData);
   },
   
-  // Delete vehicle
-  deleteVehicle: (id) => {
-    if (!id) {
-      return Promise.reject(new Error("Vehicle ID is required"));
-    }
-    return apiClient.delete(`/vehicles/${id}`);
+  isAuthenticated: () => {
+    return !!localStorage.getItem('token');
+  },
+  
+  hasRole: (role) => {
+    const user = AuthService.getCurrentUser();
+    return user && user.role === role.toLowerCase();
   }
 };
 
-// Driver API services
-export const DriverService = {
-  getAllDrivers: () => {
-    return apiClient.get('/drivers');
-  },
-  
-  getDriverById: (id) => {
-    if (!id) {
-      return Promise.reject(new Error("Driver ID is required"));
-    }
-    return apiClient.get(`/drivers/${id}`);
-  }
-};
+// Initialize auth on import
+AuthService.initAuth();
 
-// Create a named API services object before exporting
-const apiServices = { VehicleService, DriverService };
-
-export default apiServices;
+export default AuthService;

@@ -6,7 +6,7 @@ const Navigationbar = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isLoggedIn = true;
-  const userName = "John Doe"; 
+  const userName = "John Doe";
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -39,6 +39,7 @@ const Navigationbar = () => {
                 <button className="nav-link dropdown-toggle user-dropdown" onClick={toggleDropdown}>{userName}</button>
                 {dropdownOpen && (
                   <div className="dropdown-menu show">
+                    <Link className="dropdown-item" to="/track-ride" onClick={() => {handleTabClick('track-ride'); toggleDropdown();}}>Track Current Ride</Link>
                     <Link className="dropdown-item" to="/history" onClick={() => {handleTabClick('history'); toggleDropdown();}}>History</Link>
                     <Link className="dropdown-item" to="/manage-account" onClick={() => {handleTabClick('manage-account'); toggleDropdown();}}>Manage Account</Link>
                     <div className="dropdown-divider"></div>

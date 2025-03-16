@@ -5,10 +5,10 @@ const API_BASE_URL = "http://localhost:8080/api"; // Update with your backend UR
 
 const AddVehicle = () => {
   const [vehicleData, setVehicleData] = useState({
-    driverId: "", 
+    driverId: "",
     model: "",
     plateNumber: "",
-    type: "", // Changed from vehicleType to match backend field name
+    type: "",
     status: "AVAILABLE",
   });
 
@@ -20,12 +20,10 @@ const AddVehicle = () => {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        // Assuming you have an endpoint to fetch drivers
         const response = await axios.get(`${API_BASE_URL}/drivers`);
         setDrivers(response.data);
       } catch (error) {
         console.error("Error fetching drivers:", error);
-        // If you don't have a drivers endpoint yet, you can remove this code
       }
     };
 
@@ -34,9 +32,15 @@ const AddVehicle = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Convert driverId to integer if it's not empty
+    const processedValue = name === "driverId" && value !== "" 
+      ? parseInt(value, 10) 
+      : value;
+    
     setVehicleData({
       ...vehicleData,
-      [name]: value,
+      [name]: processedValue,
     });
   };
 
@@ -44,15 +48,26 @@ const AddVehicle = () => {
     e.preventDefault();
     setLoading(true);
     setMessage({ text: "", type: "" });
+    
+    // Log the data being sent for debugging
+    console.log("Sending vehicle data:", vehicleData);
 
     try {
-      // Make API call to backend
-      const response = await axios.post(`${API_BASE_URL}/vehicles`, vehicleData);
+      // Make API call to backend with proper headers
+      const response = await axios.post(
+        `${API_BASE_URL}/vehicles`, 
+        vehicleData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
       
       console.log("Vehicle Added:", response.data);
-      setMessage({ 
-        text: "Vehicle added successfully!", 
-        type: "success" 
+      setMessage({
+        text: "Vehicle added successfully!",
+        type: "success"
       });
       
       // Reset form
@@ -66,11 +81,12 @@ const AddVehicle = () => {
     } catch (error) {
       console.error("Error adding vehicle:", error);
       
-      // Display error message
+      // Display error message with more details
       setMessage({
         text: error.response?.data || "Failed to add vehicle. Please try again.",
         type: "danger"
       });
+      console.log("Error details:", error.response?.data);
     } finally {
       setLoading(false);
     }
@@ -122,7 +138,6 @@ const AddVehicle = () => {
             />
           )}
         </div>
-
         {/* Model Input */}
         <div className="mb-3">
           <label htmlFor="model" className="form-label">
@@ -138,7 +153,6 @@ const AddVehicle = () => {
             required
           />
         </div>
-
         {/* Plate Number Input */}
         <div className="mb-3">
           <label htmlFor="plateNumber" className="form-label">
@@ -154,7 +168,6 @@ const AddVehicle = () => {
             required
           />
         </div>
-
         {/* Vehicle Type Selection */}
         <div className="mb-3">
           <label htmlFor="type" className="form-label">
@@ -176,7 +189,6 @@ const AddVehicle = () => {
             <option value="Luxury">Luxury</option>
           </select>
         </div>
-
         {/* Status Selection */}
         <div className="mb-3">
           <label htmlFor="status" className="form-label">
@@ -195,9 +207,8 @@ const AddVehicle = () => {
             <option value="IN_REPAIR">In Repair</option>
           </select>
         </div>
-
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn btn-primary w-100"
           disabled={loading}
         >

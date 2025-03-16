@@ -1,0 +1,421 @@
+.track-ride-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .track-ride-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .track-ride-header h2 {
+    color: #333;
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .back-to-bookings {
+    color: #7b1fa2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .back-to-bookings:hover {
+    color: #4a148c;
+    text-decoration: underline;
+  }
+  
+  .track-ride-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    font-size: 18px;
+    color: #666;
+  }
+  
+  .track-ride-error {
+    background: #fdeded;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    color: #d32f2f;
+    border-left: 4px solid #d32f2f;
+    margin-bottom: 20px;
+  }
+  
+  .track-ride-error h3 {
+    margin-top: 0;
+  }
+  
+  .ride-info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .ride-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .ride-status-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
+  }
+  
+  .ride-status {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  
+  .ride-status.pending {
+    background-color: #fff8e1;
+    color: #ff8f00;
+  }
+  
+  .ride-status.confirmed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .ride-status.completed {
+    background-color: #e3f2fd;
+    color: #1565c0;
+  }
+  
+  .ride-status.cancelled {
+    background-color: #fafafa;
+    color: #616161;
+  }
+  
+  .ride-status.rejected {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+  .ride-time-info {
+    padding: 15px 20px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .scheduled-time {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .time-label {
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .time-value {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .time-left {
+    color: #7b1fa2;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .ride-locations {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .location {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .location:last-child {
+    margin-bottom: 0;
+  }
+  
+  .location-icon {
+    font-size: 14px;
+    margin-right: 15px;
+    margin-top: 4px;
+  }
+  
+  .pickup-icon {
+    color: #4caf50;
+  }
+  
+  .destination-icon {
+    color: #f44336;
+  }
+  
+  .location-text {
+    flex: 1;
+  }
+  
+  .location-label {
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .location-address {
+    color: #333;
+  }
+  
+  .location-divider {
+    width: 2px;
+    height: 30px;
+    background: #ddd;
+    margin: 0 0 15px 7px;
+  }
+  
+  .ride-details-section, .driver-info-section, .driver-pending-section {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .ride-details-section h4, .driver-info-section h4, .driver-pending-section h4, .ride-progress-tracker h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 18px;
+  }
+  
+  .ride-detail-row {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .ride-detail-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detail-label {
+    width: 120px;
+    color: #666;
+    font-weight: 500;
+  }
+  
+  .detail-value {
+    flex: 1;
+    color: #333;
+  }
+  
+  .driver-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .driver-name-rating {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .driver-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .driver-rating {
+    color: #f99500;
+    font-weight: 500;
+  }
+  
+  .driver-contact {
+    display: flex;
+  }
+  
+  .call-driver-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #4caf50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .call-driver-button:hover {
+    background: #388e3c;
+  }
+  
+  .phone-icon {
+    font-size: 16px;
+  }
+  
+  .driver-pending-section p {
+    color: #666;
+    margin: 0;
+  }
+  
+  .ride-progress-tracker {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .progress-stages {
+    display: flex;
+    position: relative;
+    margin-top: 30px;
+  }
+  
+  .progress-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+  }
+  
+  .stage-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    border: 2px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+    font-weight: 600;
+    margin-bottom: 10px;
+    z-index: 2;
+  }
+  
+  .progress-stage.completed .stage-indicator {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: white;
+  }
+  
+  .stage-name {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    max-width: 100px;
+  }
+  
+  .progress-stage.completed .stage-name {
+    color: #4caf50;
+    font-weight: 500;
+  }
+  
+  .stage-connector {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background-color: #ddd;
+    z-index: 1;
+  }
+  
+  .stage-connector.completed {
+    background-color: #4caf50;
+  }
+  
+  .ride-actions {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .cancel-ride-button {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-ride-button:hover {
+    background: #d32f2f;
+  }
+  
+  @media (max-width: 768px) {
+    .track-ride-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .ride-status-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .scheduled-time {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+    
+    .driver-details {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    
+    .progress-stages {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .progress-stage {
+      flex-direction: row;
+      gap: 10px;
+    }
+    
+    .stage-indicator {
+      margin-bottom: 0;
+    }
+    
+    .stage-connector {
+      left: 15px;
+      top: 50%;
+      width: 2px;
+      height: 100%;
+    }
+  }
+
+  .ride-navigation-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  
+  .view-history-link {
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .view-history-link:hover {
+    text-decoration: underline;
+  }

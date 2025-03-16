@@ -15,9 +15,8 @@ public class LoginResponseDTO {
     private String role;
     private String token;
 
-    // Additional fields based on role
-    private String name; // For all roles
-    private String userId; // Reference to the user ID
+    private String name;
+    private String userId;
 
     public static LoginResponseDTO fromUser(User user, String token) {
         LoginResponseDTO response = new LoginResponseDTO();

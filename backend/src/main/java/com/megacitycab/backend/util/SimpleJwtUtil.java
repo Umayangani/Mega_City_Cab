@@ -15,9 +15,9 @@ import java.util.function.Function;
 @Component
 public class SimpleJwtUtil {
     private final String SECRET_KEY = "your_secret_key_here_should_be_very_long_and_secure_and_at_least_256_bits";
-    private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; // 5 hours
+    private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000;
 
-    // Convert String to a proper Key object
+
     private Key getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);

@@ -3,6 +3,7 @@ package com.megacitycab.backend.controller;
 import com.megacitycab.backend.dto.LoginDTO;
 import com.megacitycab.backend.dto.LoginResponseDTO;
 import com.megacitycab.backend.dto.RegistrationDTO;
+import com.megacitycab.backend.dto.UserDTO;
 import com.megacitycab.backend.model.User;
 import com.megacitycab.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,30 @@ public class AuthController {
         try {
             System.out.println("Received registration request: " + registrationDTO);
             User user = authService.registerCustomer(registrationDTO);
-
             Map<String, Object> response = new HashMap<>();
             response.put("username", user.getUsername());
             response.put("email", user.getEmail());
             response.put("role", user.getRole());
             response.put("message", "Registration successful");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    @PostMapping("/register-admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody UserDTO userDTO) {
+        try {
+            System.out.println("Received admin registration request: " + userDTO);
+            User user = authService.registerAdmin(userDTO);
+            Map<String, Object> response = new HashMap<>();
+            response.put("username", user.getUsername());
+            response.put("email", user.getEmail());
+            response.put("role", user.getRole());
+            response.put("message", "Admin registration successful");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();

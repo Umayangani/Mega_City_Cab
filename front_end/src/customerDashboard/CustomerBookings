@@ -1,0 +1,295 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { BookingService } from '../api/BookingApiService';
+import BookingService from '../api/BookingService';
+import './CustomerBookings.css';
+
+const CustomerBookings = () => {
+  const [activeTab, setActiveTab] = useState('upcoming');
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [completedBookings, setCompletedBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Get customer ID from stored user data
+  const customerId = JSON.parse(localStorage.getItem('user'))?.id;
+  
+  useEffect(() => {
+    if (!customerId) {
+      setError("User information not found. Please log in again.");
+      setLoading(false);
+      return;
+    }
+    
+    fetchBookings();
+  }, [customerId]);
+  
+  const fetchBookings = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Get upcoming bookings
+      const upcomingResponse = await BookingService.getCustomerUpcomingBookings(customerId);
+      setUpcomingBookings(upcomingResponse.data);
+      
+      // Get completed bookings
+      const completedResponse = await BookingService.getCustomerCompletedBookings(customerId);
+      setCompletedBookings(completedResponse.data);
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+      setError("Failed to load bookings. Please try refreshing the page.");
+      
+      // Mock data for demonstration
+      setUpcomingBookings([
+        {
+          id: 1,
+          pickupLocation: "123 Main St, Cityville",
+          destination: "456 Park Ave, Townsburg",
+          scheduledDatetime: "2025-03-20T10:30:00",
+          status: "PENDING",
+          amount: 65.75,
+          vehicle: { model: "Toyota Camry", type: "SEDAN" },
+          driver: null
+        },
+        {
+          id: 2,
+          pickupLocation: "789 Oak Dr, Villageton",
+          destination: "101 Pine Rd, Hamletville",
+          scheduledDatetime: "2025-03-21T14:15:00",
+          status: "CONFIRMED",
+          amount: 45.50,
+          vehicle: { model: "Honda Civic", type: "SEDAN" },
+          driver: { name: "John Driver", rating: 4.8 }
+        }
+      ]);
+      
+      setCompletedBookings([
+        {
+          id: 3,
+          pickupLocation: "222 Elm St, Metropolis",
+          destination: "333 Maple Ave, Gotham",
+          scheduledDatetime: "2025-03-10T09:00:00",
+          completionTime: "2025-03-10T09:45:00",
+          status: "COMPLETED",
+          amount: 38.25,
+          paymentStatus: "PAID",
+          vehicle: { model: "Nissan Altima", type: "SEDAN" },
+          driver: { name: "Jane Driver", rating: 4.9 }
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleCancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) {
+      return;
+    }
+    
+    try {
+      await BookingService.cancelBooking(bookingId);
+      
+      // Refresh bookings after cancellation
+      fetchBookings();
+      alert("Booking cancelled successfully");
+    } catch (err) {
+      console.error("Error cancelling booking:", err);
+      alert("Failed to cancel booking. Please try again.");
+    }
+  };
+  
+  const formatDateTime = (dateTimeString) => {
+    const options = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    };
+    return new Date(dateTimeString).toLocaleString(undefined, options);
+  };
+  
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'PENDING':
+        return 'status-badge pending';
+      case 'CONFIRMED':
+        return 'status-badge confirmed';
+      case 'COMPLETED':
+        return 'status-badge completed';
+      case 'CANCELLED':
+        return 'status-badge cancelled';
+      case 'REJECTED':
+        return 'status-badge rejected';
+      default:
+        return 'status-badge';
+    }
+  };
+  
+  const renderBookingCard = (booking) => {
+    const isPending = booking.status === 'PENDING';
+    const isConfirmed = booking.status === 'CONFIRMED';
+    
+    return (
+      <div className="booking-card" key={booking.id}>
+        <div className="booking-header">
+          <div className="booking-id">Booking #{booking.id}</div>
+          <div className={getStatusBadgeClass(booking.status)}>
+            {booking.status}
+          </div>
+        </div>
+        
+        <div className="booking-body">
+          <div className="booking-row">
+            <div className="booking-label">Pickup:</div>
+            <div className="booking-value">{booking.pickupLocation}</div>
+          </div>
+          
+          <div className="booking-row">
+            <div className="booking-label">Destination:</div>
+            <div className="booking-value">{booking.destination}</div>
+          </div>
+          
+          <div className="booking-row">
+            <div className="booking-label">Schedule:</div>
+            <div className="booking-value">{formatDateTime(booking.scheduledDatetime)}</div>
+          </div>
+          
+          <div className="booking-row">
+            <div className="booking-label">Vehicle:</div>
+            <div className="booking-value">
+              {booking.vehicle ? `${booking.vehicle.model} (${booking.vehicle.type})` : 'Not assigned yet'}
+            </div>
+          </div>
+          
+          <div className="booking-row">
+            <div className="booking-label">Driver:</div>
+            <div className="booking-value">
+              {booking.driver ? (
+                <span>
+                  {booking.driver.name} <span className="driver-rating">★ {booking.driver.rating.toFixed(1)}</span>
+                </span>
+              ) : (
+                'Not assigned yet'
+              )}
+            </div>
+          </div>
+          
+          <div className="booking-row">
+            <div className="booking-label">Amount:</div>
+            <div className="booking-value booking-amount">${booking.amount.toFixed(2)}</div>
+          </div>
+          
+          {booking.status === 'COMPLETED' && (
+            <div className="booking-row">
+              <div className="booking-label">Payment:</div>
+              <div className="booking-value">
+                <span className={`payment-status ${booking.paymentStatus.toLowerCase()}`}>
+                  {booking.paymentStatus}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div className="booking-actions">
+          {isPending && (
+            <button className="cancel-booking" onClick={() => handleCancelBooking(booking.id)}>
+              Cancel Booking
+            </button>
+          )}
+          
+          {(isPending || isConfirmed) && (
+            <Link to={`/customer/track-ride/${booking.id}`} className="track-ride-link">
+              Track Ride
+            </Link>
+          )}
+          
+          {booking.status === 'COMPLETED' && booking.paymentStatus === 'PENDING' && (
+            <button className="pay-now-button">
+              Pay Now
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
+  return (
+    <div className="customer-bookings">
+      <div className="bookings-header">
+        <h2>My Bookings</h2>
+        <div className="booking-actions-top">
+          <button className="refresh-button" onClick={fetchBookings} disabled={loading}>
+            {loading ? 'Refreshing...' : '↻ Refresh'}
+          </button>
+          <Link to="/customer/book-ride" className="new-booking-button">
+            + Book New Ride
+          </Link>
+        </div>
+      </div>
+      
+      <div className="bookings-tabs">
+        <div 
+          className={`tab ${activeTab === 'upcoming' ? 'active' : ''}`}
+          onClick={() => setActiveTab('upcoming')}
+        >
+          Upcoming
+          {upcomingBookings.length > 0 && <span className="tab-count">{upcomingBookings.length}</span>}
+        </div>
+        <div 
+          className={`tab ${activeTab === 'completed' ? 'active' : ''}`}
+          onClick={() => setActiveTab('completed')}
+        >
+          Completed
+          {completedBookings.length > 0 && <span className="tab-count">{completedBookings.length}</span>}
+        </div>
+      </div>
+      
+      {error && <div className="error-message">{error}</div>}
+      
+      <div className="bookings-content">
+        {loading ? (
+          <div className="loading-spinner">Loading your bookings...</div>
+        ) : (
+          <>
+            {activeTab === 'upcoming' && (
+              <div className="bookings-list">
+                {upcomingBookings.length === 0 ? (
+                  <div className="empty-bookings">
+                    <div className="empty-icon">🚗</div>
+                    <h3>No upcoming bookings</h3>
+                    <p>You don't have any upcoming rides scheduled.</p>
+                    <Link to="/customer/book-ride" className="book-now-link">
+                      Book a Ride Now
+                    </Link>
+                  </div>
+                ) : (
+                  upcomingBookings.map(booking => renderBookingCard(booking))
+                )}
+              </div>
+            )}
+            
+            {activeTab === 'completed' && (
+              <div className="bookings-list">
+                {completedBookings.length === 0 ? (
+                  <div className="empty-bookings">
+                    <div className="empty-icon">📋</div>
+                    <h3>No completed bookings</h3>
+                    <p>You don't have any completed ride history yet.</p>
+                  </div>
+                ) : (
+                  completedBookings.map(booking => renderBookingCard(booking))
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CustomerBookings;

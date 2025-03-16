@@ -11,6 +11,8 @@ import {
   FaTools,
 } from "react-icons/fa";
 
+import './adminD.css';
+
 const Dashboard = () => {
   return (
     <div className="p-5 bg-light">

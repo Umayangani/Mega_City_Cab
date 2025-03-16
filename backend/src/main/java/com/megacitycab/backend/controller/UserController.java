@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:3000") // Specify your React app's URL
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
 

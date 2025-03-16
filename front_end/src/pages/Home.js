@@ -30,9 +30,6 @@ const Home = () => {
             <Link to="/book-now" className="book-now-btn">
               Book Now
             </Link>
-            <Link to="/download-app" className="download-app-btn">
-              Download App
-            </Link>
           </div>
         </div>
       </div>
